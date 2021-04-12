@@ -1,7 +1,14 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import {ApolloServer} from 'apollo-server-micro'
+import mysql from 'serverless-mysql'
+import {schema} from '../../backend/schema'
+import {db} from "../../backend/db";
 
-import {NextApiRequest, NextApiResponse} from "next";
+const apolloServer = new ApolloServer({ schema, context: { db } })
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
-  res.status(200).json({ name: 'John Doe' })
+export const config = {
+  api: {
+    bodyParser: false,
+  },
 }
+
+export default apolloServer.createHandler({ path: '/api/graphql' })
